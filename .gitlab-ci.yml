@@ -4,6 +4,6 @@ image: hub.nexdev.net/base/python:3.10-alpine
 scanning:
   script:
     - apk update && apk add openssh sshpass
-    - sshpass -p "XDR%tgbHU*"  scp -o StrictHostKeyChecking=no root@10.70.70.39:/root/trivy-redis/trivy-db/metadata.json db/
+    - sshpass -p $PASS_SSH_TRIVY_SERVER  scp -o StrictHostKeyChecking=no root@10.70.70.39:/root/trivy-redis/trivy-db/metadata.json db/
     - pip3 install -r requirements.txt
     - python3 scanningBaseImg.py
