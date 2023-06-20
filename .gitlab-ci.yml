@@ -1,0 +1,7 @@
+image: hub.nexdev.net/base/python:3.10-alpine
+
+
+scanning:
+  script:
+    - apk update && apk add scp sshpass
+    - sshpass -p "XDR%tgbHU*" scp root@10.70.70.39:/root/trivy-redis/trivy-db/metadata.json db/
