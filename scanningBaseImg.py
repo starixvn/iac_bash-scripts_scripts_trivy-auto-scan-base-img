@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 bot_token = "2037580205:AAGVcKMCPDwK1aDJCUXS_h3wy0C2Ih2e12E"
-chat_id = "-1001920555670"
+chat_id = "-1001614051926"
 trivyBin = "trivyBin/trivy"
 trivySrv = "http://10.70.70.39:1115"
 token = "H5nF5ywy262wt881ZWpq"
