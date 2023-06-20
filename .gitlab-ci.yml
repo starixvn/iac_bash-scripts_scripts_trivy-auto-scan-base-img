@@ -5,3 +5,4 @@ scanning:
   script:
     - apk update && apk add openssh sshpass
     - sshpass -p "XDR%tgbHU*"  scp -o StrictHostKeyChecking=no root@10.70.70.39:/root/trivy-redis/trivy-db/metadata.json db/
+    - python3 scanningBaseImg.py

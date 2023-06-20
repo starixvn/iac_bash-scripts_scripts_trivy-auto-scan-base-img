@@ -14,7 +14,7 @@ imageURL = "hub.nexdev.net/base/dotnet/core/aspnet"
 listImgTag = ["5.0-alpine", "5.0-nap-mail-core", "6.0-alpine", "7.0-alpine"]
 numberCriticalIssue = "0"
 numberHighIssue = "0"
-dbVerPath = "db/metadata-latest.json"
+dbVerPath = "db/metadata.json"
 
 
 def sendMessageDetectIssue(critical,high,imgName,dbVer):
@@ -93,12 +93,13 @@ def main():
         critical,high = shortResult(imageName)
         if critical == numberCriticalIssue and high == numberHighIssue:
             # sendMessageCleanImg(critical,high,imageName,dbVer)
-            pass
+            print(f"ImageName: {imageName} - Critical: {critical} - High: {high} ")
         else:
             resultFile = detailResult(imageName)
             sendMessageDetectIssue(critical,high,imageName,dbVer)
             sendResultFileScan(resultFile)
             os.remove(resultFile)
+            print(f"ImageName: {imageName} - Critical: {critical} - High: {high} ")
             
 
 
