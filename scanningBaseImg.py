@@ -6,7 +6,8 @@ from datetime import datetime
 
 
 bot_token = "2037580205:AAGVcKMCPDwK1aDJCUXS_h3wy0C2Ih2e12E"
-chat_id = "-1001614051926"
+chat_id = "-1001614051926" # real group
+# chat_id = "-1001757730802" # test group
 trivyBin = "trivyBin/trivy"
 trivySrv = "http://10.70.70.39:1115"
 token = "H5nF5ywy262wt881ZWpq"
@@ -17,15 +18,33 @@ numberHighIssue = "0"
 numberMediumIssue = "0"
 dbVerPath = "db/metadata.json"
 
+# Detec Medium Issues
+# def sendMessageDetectIssue(critical,high,medium,imgName,dbVer):
+#     detailMessage = """
+# ⚠️<b>Vulnerabilities Detected</b>⚠️
+# <b>Image Name:</b> <code>{0}</code>,
+# <b>Critical:</b> {1}, <b>High:</b> {2}, <b>Medium</b>: {3}
+# <b>DatabaseVer:</b> <code>{4}</code>
+# <i>For details, please follow the following file</i>
+#     """.format(imgName,critical, high, medium, dbVer)
+#     params = {
+#         'chat_id': chat_id,
+#         'text': detailMessage,
+#         'parse_mode': 'HTML'
+#     }
+#     url_send = "https://api.telegram.org/bot" + \
+#         bot_token + "/sendMessage"
+#     requests.post(url_send, params=params)
 
-def sendMessageDetectIssue(critical,high,medium,imgName,dbVer):
+
+def sendMessageDetectIssue(critical,high,imgName,dbVer):
     detailMessage = """
 ⚠️<b>Vulnerabilities Detected</b>⚠️
 <b>Image Name:</b> <code>{0}</code>,
-<b>Critical:</b> {1}, <b>High:</b> {2}, <b>Medium</b>: {3}
-<b>DatabaseVer:</b> <code>{4}</code>
+<b>Critical:</b> {1}, <b>High:</b> {2},
+<b>DatabaseVer:</b> <code>{3}</code>
 <i>For details, please follow the following file</i>
-    """.format(imgName,critical, high, medium, dbVer)
+    """.format(imgName,critical, high, dbVer)
     params = {
         'chat_id': chat_id,
         'text': detailMessage,
@@ -34,6 +53,8 @@ def sendMessageDetectIssue(critical,high,medium,imgName,dbVer):
     url_send = "https://api.telegram.org/bot" + \
         bot_token + "/sendMessage"
     requests.post(url_send, params=params)
+
+
 
 
 
@@ -68,15 +89,17 @@ def showVersionTrivyDB(versionFile):
     content = data["UpdatedAt"]
     return content
 
-# def shortResult(imageName):
-#     command = f"""{trivyBin} client --remote {trivySrv} --format template --template '{{{{- $critical := 0 }}}}{{{{- $high := 0 }}}}{{{{- range . }}}}{{{{- range .Vulnerabilities }}}}{{{{- if  eq .Severity "CRITICAL" }}}}{{{{- $critical = add $critical 1 }}}}{{{{- end }}}}{{{{- if  eq .Severity "HIGH" }}}}{{{{- $high = add $high 1 }}}}{{{{- end }}}}{{{{- end }}}}{{{{- end }}}}{{{{ $critical }}}},{{{{ $high }}}}' --ignore-unfixed --token {token} {imageName} | tail -1"""
-#     result = sb.getoutput(command)
-#     return result.split(',')[0], result.split(',')[1]
-
 def shortResult(imageName):
-    command = f"""{trivyBin} client --remote {trivySrv} --format template --template '{{{{- $critical := 0 }}}}{{{{- $high := 0 }}}}{{{{- $medium := 0 }}}}{{{{- range . }}}}{{{{- range .Vulnerabilities }}}}{{{{- if eq .Severity "CRITICAL" }}}}{{{{- $critical = add $critical 1 }}}}{{{{- end }}}}{{{{- if eq .Severity "HIGH" }}}}{{{{- $high = add $high 1 }}}}{{{{- end }}}}{{{{- if eq .Severity "MEDIUM" }}}}{{{{- $medium = add $medium 1 }}}}{{{{- end }}}}{{{{- end }}}}{{{{- end }}}}{{{{ $critical }}}},{{{{ $high }}}},{{{{ $medium }}}}' --ignore-unfixed --token {token} {imageName} | tail -1"""
+    command = f"""{trivyBin} client --remote {trivySrv} --format template --template '{{{{- $critical := 0 }}}}{{{{- $high := 0 }}}}{{{{- range . }}}}{{{{- range .Vulnerabilities }}}}{{{{- if  eq .Severity "CRITICAL" }}}}{{{{- $critical = add $critical 1 }}}}{{{{- end }}}}{{{{- if  eq .Severity "HIGH" }}}}{{{{- $high = add $high 1 }}}}{{{{- end }}}}{{{{- end }}}}{{{{- end }}}}{{{{ $critical }}}},{{{{ $high }}}}' --ignore-unfixed --token {token} {imageName} | tail -1"""
     result = sb.getoutput(command)
-    return result.split(',')[0], result.split(',')[1], result.split(',')[2]
+    return result.split(',')[0], result.split(',')[1]
+
+
+# show Result with Medium Issues
+# def shortResult(imageName):
+#     command = f"""{trivyBin} client --remote {trivySrv} --format template --template '{{{{- $critical := 0 }}}}{{{{- $high := 0 }}}}{{{{- $medium := 0 }}}}{{{{- range . }}}}{{{{- range .Vulnerabilities }}}}{{{{- if eq .Severity "CRITICAL" }}}}{{{{- $critical = add $critical 1 }}}}{{{{- end }}}}{{{{- if eq .Severity "HIGH" }}}}{{{{- $high = add $high 1 }}}}{{{{- end }}}}{{{{- if eq .Severity "MEDIUM" }}}}{{{{- $medium = add $medium 1 }}}}{{{{- end }}}}{{{{- end }}}}{{{{- end }}}}{{{{ $critical }}}},{{{{ $high }}}},{{{{ $medium }}}}' --ignore-unfixed --token {token} {imageName} | tail -1"""
+#     result = sb.getoutput(command)
+#     return result.split(',')[0], result.split(',')[1], result.split(',')[2]
 
 
 # critical,high,medium = shortResult("hub.nexdev.net/base/dotnet/core/aspnet:5.0-nap-mail-core")
@@ -102,16 +125,16 @@ def main():
     dbVer = showVersionTrivyDB(dbVerPath)
     for imageTag in listImgTag:
         imageName = f"{imageURL}:{imageTag}"
-        critical,high,medium = shortResult(imageName)
-        if critical == numberCriticalIssue and high == numberHighIssue and medium == numberMediumIssue:
+        critical,high = shortResult(imageName)
+        if critical == numberCriticalIssue and high == numberHighIssue:
             # sendMessageCleanImg(critical,high,imageName,dbVer)
-            print(f"ImageName: {imageName} - Critical: {critical} - High: {high} - Medium: {medium}")
+            print(f"ImageName: {imageName} - Critical: {critical} - High: {high}")
         else:
             resultFile = detailResult(imageName)
-            sendMessageDetectIssue(critical,high,medium,imageName,dbVer)
+            sendMessageDetectIssue(critical,high,imageName,dbVer)
             sendResultFileScan(resultFile)
             os.remove(resultFile)
-            print(f"ImageName: {imageName} - Critical: {critical} - High: {high} - Medium: {medium}")
+            print(f"ImageName: {imageName} - Critical: {critical} - High: {high}")
             
 
 
