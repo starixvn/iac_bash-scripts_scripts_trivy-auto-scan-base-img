@@ -6,13 +6,13 @@ from datetime import datetime
 
 
 bot_token = "2037580205:AAGVcKMCPDwK1aDJCUXS_h3wy0C2Ih2e12E"
-chat_id = "-1001614051926" # real group
-# chat_id = "-1001757730802" # test group
+# chat_id = "-1001614051926" # real group
+chat_id = "-1001757730802" # test group
 trivyBin = "trivyBin/trivy"
 trivySrv = "http://10.70.70.39:1115"
 token = "H5nF5ywy262wt881ZWpq"
-imageURL = "hub.nexdev.net/base/dotnet/core/aspnet"
-listImgTag = ["5.0-alpine", "5.0-nap-mail-core", "6.0-alpine", "7.0-alpine"]
+imageURL = "hub.nexdev.net/rebuild-baseimage/dotnetcore/aspnet"
+listImgTag = ["3.1.32-alpine", "5.0-alpine", "5.0-nap-mail-core", "6.0-alpine", "7.0-alpine", "7.0-nap-mail-core", "7.0-slim"]
 numberCriticalIssue = "0"
 numberHighIssue = "0"
 numberMediumIssue = "0"
